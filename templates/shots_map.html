@@ -1,10 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Hi there</title>
-</head>
-<body>
-Nothing here yet
-</body>
-</html>
+{% extends 'commander/base_map.html' %}
+{% block content %}
+
+
+
+    <script>
+        function gps_lat_end(lat, lng, head){
+            return Math.asin( Math.sin(lat)*Math.cos(400/6371000) +
+                    Math.cos(lng)*Math.sin(400/6371000)*Math.cos(head));
+        }
+        function gps_lng_end(lat, lng, head){
+            return lng + Math.atan2(Math.sin(head)*Math.sin(400/6371000)*Math.cos(lat),
+                         Math.cos(400/6371000)-Math.sin(lat)*Math.sin(gps_lat_end(lat, lng, head)));
+        }
+      function initMap() {
+        var map;
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {
+            lat: {{ center.gps_lat }}, lng: {{ center.gps_long }}
+          },
+          zoom: 8
+        });
+          {% for shot in shots %}
+              var marker{{ forloop.counter }} = new google.maps.Marker({
+                  position: {lat: {{shot.gps_lat}}, lng: {{ shot.gps_long }} },
+                  map: map,
+              });
+              var drawCoordinates{{ forloop.counter }} = [
+                        {lat: {{ shot.gps_lat }}, lng: {{ shot.gps_long }}},
+                        {lat: gps_lat_end({{ shot.gps_lat }}, {{ shot.gps_long }}, {{ shot.heading_point }}),
+                            lng: gps_lng_end({{ shot.gps_lat }}, {{ shot.gps_long }}, {{ shot.heading_point }})}
+                      ];
+
+              var drawline{{ forloop.counter }} = new google.maps.Polyline({
+                  path: drawCoordinates{{ forloop.counter }},
+                  geodesic: true,
+                  strokeColor: '#FF0000',
+                  strokeOpacity: 1.0,
+                  strokeWeight: 2
+              });
+
+              drawline{{ forloop.counter }}.setMap(map);
+          {% endfor %}
+      }
+    </script>
+
+{% endblock %}
