@@ -27,8 +27,8 @@
               });
               var drawCoordinates{{ forloop.counter }} = [
                         {lat: {{ shot.gps_lat }}, lng: {{ shot.gps_long }}},
-                        {lat: gps_lat_end({{ shot.gps_lat }}, {{ shot.gps_long }}, {{ shot.heading_point }}),
-                            lng: gps_lng_end({{ shot.gps_lat }}, {{ shot.gps_long }}, {{ shot.heading_point }})}
+                        {lat: {{ shot.gps_lat }} + 0.1*Math.sin({{ shot.heading_point }}),
+			 lng: {{ shot.gps_long }} + 0.1*Math.cos({{ shot.heading_point }})}
                       ];
 
               var drawline{{ forloop.counter }} = new google.maps.Polyline({
