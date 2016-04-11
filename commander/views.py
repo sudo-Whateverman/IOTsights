@@ -29,4 +29,14 @@ def shot_new(request):
         form = ShotForm
     return render(request, 'commander/shot_new.html', {'form': form})
 
-
+def shot_new_get(request, iot_id, lat, longt, elev, head):
+    form = ShotForm(request.GET)
+    shot = form.save(commit=False)
+    shot.IOT_id = iot_id
+    shot.gps_lat = lat
+    shot.gps_long = longt
+    shot.registered_date = timezone.now()
+    shot.gps_elev = elev
+    shot.heading_point = head
+    shot.save()
+    return redirect('/')
