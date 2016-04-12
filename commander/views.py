@@ -30,7 +30,7 @@ def shot_new(request):
     return render(request, 'commander/shot_new.html', {'form': form})
 
 def shot_new_get(request, iot_id, lat, longt, elev, head):
-    shot = Shot
+    shot = Shot()
     shot.IOT_id = iot_id
     shot.gps_lat = lat
     shot.gps_long = longt
